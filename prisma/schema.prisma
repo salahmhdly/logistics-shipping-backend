@@ -1,0 +1,102 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String   @unique
+  password  String
+  userType  UserType
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profileIndividual ProfileIndividual?
+  profileCompany    ProfileCompany?
+  ads               Ad[]
+  reviewsMade       Review[] @relation("UserReviews")
+  notifications     Notification[]
+}
+
+model ProfileIndividual {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  fullName  String
+  avatarUrl String?
+  
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ProfileCompany {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  contactFullName    String
+  companyName        String
+  truckCount         Int
+  truckTypes         String // e.g., "dina, trailer"
+  registrationNumber String
+  description        String?
+  avatarUrl          String?
+  coverUrl           String?
+  fleetImageUrls     String[]
+
+  user               User     @relation(fields: [userId], references: [id])
+  reviewsReceived    Review[] @relation("CompanyReviews")
+}
+
+model Ad {
+  id              String   @id @default(cuid())
+  authorId        String
+  adType          AdType // CARGO or TRUCK
+  createdAt       DateTime @default(now())
+
+  // Common Fields
+  fromLocation    String
+  toLocation      String?
+  truckType       String
+  availableDate   DateTime
+  description     String?
+  mediaUrl        String? // For image or video
+
+  author          User     @relation(fields: [authorId], references: [id])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  rating      Int      // 1 to 5
+  text        String?
+  authorId    String
+  companyId   String
+  createdAt   DateTime @default(now())
+
+  author      User           @relation("UserReviews", fields: [authorId], references: [id])
+  company     ProfileCompany @relation("CompanyReviews", fields: [companyId], references: [id])
+}
+
+model Notification {
+    id          String      @id @default(cuid())
+    userId      String      // The user who receives the notification
+    title       String
+    description String
+    isRead      Boolean     @default(false)
+    createdAt   DateTime    @default(now())
+
+    user        User        @relation(fields: [userId], references: [id])
+}
+
+enum UserType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum AdType {
+  CARGO
+  TRUCK
+}
+
