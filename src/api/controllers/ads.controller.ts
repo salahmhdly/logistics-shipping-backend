@@ -5,7 +5,7 @@ import { AdType } from '@prisma/client';
 
 export const createAd = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const userId = req.userId;
+    const userId = req.userId!;
     const { adType, fromLocation, toLocation, truckType, availableDate, description } = req.body;
     const mediaFile = req.file;
 
@@ -72,7 +72,7 @@ export const getAdById = async (req: Request, res: Response, next: NextFunction)
 export const deleteAd = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const userId = req.userId;
+    const userId = req.userId!;
 
     const ad = await prisma.ad.findUnique({ where: { id } });
 

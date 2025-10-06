@@ -5,7 +5,8 @@ import { UserType } from '@prisma/client';
 
 export const getMyProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const userId = req.userId;
+    const userId = req.userId!;
+    const userType = req.userType!;
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -27,7 +28,8 @@ export const getMyProfile = async (req: AuthenticatedRequest, res: Response, nex
 
 export const updateMyProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const userId = req.userId;
+    const userId = req.userId!;
+    const userType = req.userType!;
     const userType = req.userType;
     const { fullName, avatarUrl, contactFullName, companyName, truckCount, truckTypes, registrationNumber, description, coverUrl, fleetImageUrls } = req.body;
 

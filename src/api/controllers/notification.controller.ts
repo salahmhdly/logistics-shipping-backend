@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from '../../types/express';
 
 export const getMyNotifications = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const userId = req.userId;
+    const userId = req.userId!;
 
     const notifications = await prisma.notification.findMany({
       where: { userId },
@@ -20,7 +20,7 @@ export const getMyNotifications = async (req: AuthenticatedRequest, res: Respons
 export const markNotificationAsRead = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const userId = req.userId;
+    const userId = req.userId!;
 
     const notification = await prisma.notification.updateMany({
       where: { id, userId },

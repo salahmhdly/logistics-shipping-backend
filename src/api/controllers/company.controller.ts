@@ -22,7 +22,7 @@ export const getCompanyReviews = async (req: Request, res: Response, next: NextF
 export const addCompanyReview = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params; // companyId
-    const userId = req.userId;
+    const userId = req.userId!;
     const { rating, text } = req.body;
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
