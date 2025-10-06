@@ -20,6 +20,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; userType: UserType };
+    // Assign decoded values to req, and TypeScript will now understand that req is AuthenticatedRequest
     (req as AuthenticatedRequest).userId = decoded.userId;
     (req as AuthenticatedRequest).userType = decoded.userType;
     next();
