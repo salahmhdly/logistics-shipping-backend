@@ -30,7 +30,6 @@ export const updateMyProfile = async (req: AuthenticatedRequest, res: Response, 
   try {
     const userId = req.userId!;
     const userType = req.userType!;
-    const userType = req.userType;
     const { fullName, avatarUrl, contactFullName, companyName, truckCount, truckTypes, registrationNumber, description, coverUrl, fleetImageUrls } = req.body;
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
